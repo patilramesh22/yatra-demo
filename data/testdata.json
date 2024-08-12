@@ -1,8 +1,14 @@
 {
- "test1":{
-	    "goingfrom":"Mum",
-            "goingto":"Bangalore",
-            "date":"10/01/2024",
-            "stop":"1 Stop"
-        }
+	"test1": {
+		"deptfrom": "Mumbai",
+		"goingto": "Bangalore",
+		"date": "15/10/2024",
+		"stop": "1 Stop"
+	},
+	"test2": {
+		"deptfrom": "Bangalore",
+		"goingto": "Mumbai",
+		"date": "20/12/2024",
+		"stop": "1 Stop"
+	}
 }

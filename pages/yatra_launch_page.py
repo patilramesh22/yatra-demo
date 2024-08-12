@@ -1,81 +1,81 @@
-import logging
+import time
 
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from generic.base_test import BaseTest
-from generic.utilities import Utils
-from pages.search_flights_results_page import SearchFlightResults
+
+from generic.base_driver import BaseDriver
+from pages.search_flights_results_page import SearchFlightsResultsPage
+from utilities.utils import Utils
 
 
-class LaunchPage(BaseTest):
-    log = Utils.custom_logger(log_Level=logging.INFO)
+class LaunchPage(BaseDriver):
+    log = Utils.custom_logger()
+    __dept_from = (By.ID, "BE_flight_origin_city")
+    __search_results = (By.XPATH, "//div[@class='viewport']//li")
+    __going_to = (By.ID, "BE_flight_arrival_city")
+    __dept_date = (By.ID, "BE_flight_origin_date")
+    __all_dates = (By.XPATH, "//div[@id='monthWrapper']//td[@class!='inActiveTD' and @class!='inActiveTD weekend']")
+    __search_flights_btn = (By.XPATH, "//input[@value='Search Flights']")
 
     def __init__(self, driver):
-        # super().__init__(driver)
+        super().__init__(driver)
         self.driver = driver
 
-    dept_from = (By.XPATH, "//input[@id='BE_flight_origin_city']")
-    going_to = (By.XPATH, "//input[@id='BE_flight_arrival_city']")
-    dept_date = (By.XPATH, "//input[@id='BE_flight_origin_date']")
-    all_dates = (By.XPATH, "//div[@id='monthWrapper']//td[@class!='inActiveTD']")
-    search_btn = (By.XPATH, "//input[@value='Search Flights']")
-    search_results_list = (By.XPATH, "//div[@class='viewport']//div[1]/li")
+    def get_dept_from_field(self):
+        return self.wait_until_element_is_clickable(*self.__dept_from)
 
-    def getDepartFromField(self):
-        return self.wait_until_element_is_clickable(*self.dept_from)
+    def get_search_results_list(self):
+        return self.wait_until_presence_of_all_elements_located(*self.__search_results)
 
-    def getSearchResultsList(self):
-        return self.wait_for_presence_of_all_elements(*self.search_results_list)
-
-    def enterDepartFromLocation(self, depart_location):
-        self.getDepartFromField().click()
-        self.log.info('clicked on dept from')
-        self.getDepartFromField().send_keys(depart_location)
-        search_results = self.getSearchResultsList()
-        print(len(search_results))
-        for result in search_results:
-            print(result.text)
-            if depart_location in result.text:
+    def dept_from_loc(self, dept_from_loc):
+        self.get_dept_from_field().click()
+        self.get_dept_from_field().send_keys(dept_from_loc)
+        search_results_list = self.get_search_results_list()
+        self.log.info(len(search_results_list))
+        for result in search_results_list:
+            self.log.info(result.text)
+            if dept_from_loc in result.text:
                 result.click()
                 break
-        self.getDepartFromField().send_keys(Keys.ENTER)
+        print('--------------------------------------------------')
 
-    def getGoingToField(self):
-        return self.wait_until_element_is_clickable(*self.going_to)
+    def get_going_to_field(self):
+        return self.wait_until_element_is_clickable(*self.__going_to)
 
-    def enterGoingToLocation(self, going_to_location):
-        self.getGoingToField().click()
-        self.log.info('clicked on going to')
-        self.getGoingToField().send_keys(going_to_location)
-        search_results = self.getSearchResultsList()
-        print(len(search_results))
-        for result in search_results:
-            print(result.text)
-            if going_to_location in result.text:
+    def going_to_loc(self, going_to_loc):
+        self.get_going_to_field().click()
+        self.get_going_to_field().send_keys(going_to_loc)
+        search_results_list = self.get_search_results_list()
+        self.log.info(len(search_results_list))
+        for result in search_results_list:
+            self.log.info(result.text)
+            if going_to_loc in result.text:
                 result.click()
                 break
 
-    def getDepartDate(self):
-        return self.wait_until_element_is_clickable(*self.dept_date)
+        print('--------------------------------------------------')
 
-    def getAllDatesField(self):
-        return self.wait_for_presence_of_all_elements(*self.all_dates)
+    def get_dept_date_field(self):
+        return self.wait_until_element_is_clickable(*self.__dept_date)
 
-    def selectDepartDate(self, deptdate):
-        self.getDepartDate().click()
-        all_dates_results = self.getAllDatesField()
-        for date in all_dates_results:
-            if date.get_attribute("data-date") == deptdate:
+    def get_all_dates_list(self):
+        return self.wait_until_presence_of_all_elements_located(*self.__all_dates)
+
+    def select_dept_date(self, departure_date):
+        self.get_dept_date_field().click()
+        all_dates = self.get_all_dates_list()
+        for date in all_dates:
+            if date.get_attribute("data-date") == departure_date:
                 date.click()
+                time.sleep(3)
                 break
 
-    def click_search(self):
-        self.driver.find_element(*self.search_btn).click()
+    def click_on_search_flights(self):
+        self.driver.find_element(*self.__search_flights_btn).click()
 
-    def search_flights(self, depart_location, going_to_location, deptdate):
-        self.enterDepartFromLocation(depart_location)
-        self.enterGoingToLocation(going_to_location)
-        self.selectDepartDate(deptdate)
-        self.click_search()
-        search_flight_results = SearchFlightResults(self.driver)
-        return search_flight_results
+    def search_flights(self, dept_from_loc, going_to_loc, departure_date):
+        self.dept_from_loc(dept_from_loc)
+        self.going_to_loc(going_to_loc)
+        self.select_dept_date(departure_date)
+        self.click_on_search_flights()
+        search_flights_results = SearchFlightsResultsPage(self.driver)
+        return search_flights_results

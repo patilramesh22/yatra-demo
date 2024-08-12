@@ -1,0 +1,11 @@
+[32mINFO    [0m LaunchPage:yatra_launch_page.py:33 1
+[32mINFO    [0m LaunchPage:yatra_launch_page.py:35 Mumbai (BOM)
+Chhatrapati Shivaji International
+India
+[32mINFO    [0m LaunchPage:yatra_launch_page.py:48 10
+[32mINFO    [0m LaunchPage:yatra_launch_page.py:50 New Delhi (DEL)
+Indira Gandhi International
+India
+[32mINFO    [0m LaunchPage:yatra_launch_page.py:50 Mumbai (BOM)
+Chhatrapati Shivaji International
+India

@@ -1,2 +1,0 @@
-[32mINFO    [0m LaunchPage:yatra_launch_page.py:32 clicked on dept from
-[32mINFO    [0m LaunchPage:yatra_launch_page.py:48 clicked on going to
